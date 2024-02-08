@@ -2,7 +2,6 @@ package client;
 
 import exceptions.LoginTakenException;
 import server.ChatServer;
-import server.ServerViewSwing;
 
 import javax.swing.*;
 import java.awt.*;
@@ -82,7 +81,7 @@ public class ChatClientViewSwing extends JFrame implements ChatClientView {
                         messages.append("Connection failed\n");
                     }
                 } catch (LoginTakenException ex) {
-                    messages.append(ex.getMessage());
+                    messages.append(ex.getMessage() + "\n");
                 }
             }
         });
