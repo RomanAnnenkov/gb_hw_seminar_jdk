@@ -36,18 +36,25 @@ public class ServerWindow extends JFrame {
 
         setTitle("Chat server");
 
+        addPanels();
+        addListeners();
+
+        setVisible(true);
+
+        isServerWorking = false;
+
+    }
+
+    private void addPanels() {
         JPanel buttonsPanel = new JPanel(new GridLayout(1, 2));
         buttonsPanel.add(buttonStart);
         buttonsPanel.add(buttonStop);
         add(buttonsPanel, BorderLayout.SOUTH);
         informationMessages.setEditable(false);
         add(new JScrollPane(informationMessages), BorderLayout.CENTER);
+    }
 
-
-        setVisible(true);
-
-        isServerWorking = false;
-
+    private void addListeners() {
         buttonStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -75,7 +82,6 @@ public class ServerWindow extends JFrame {
                 }
             }
         });
-
     }
 
     public JTextArea getMessages() {

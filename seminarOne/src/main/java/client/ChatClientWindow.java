@@ -18,12 +18,12 @@ public class ChatClientWindow extends JFrame {
     private final JPasswordField password = new JPasswordField("password");
     private final JTextField serverIp = new JTextField("127.0.0.1");
     private final JTextField serverPort = new JTextField("9100");
-    private JTextArea messages = new JTextArea();
+    private final JTextArea messages = new JTextArea();
     private final JTextField messageForSend = new JTextField();
 
     private final JButton buttonConnect = new JButton("connect");
     private final JButton buttonSendMessage = new JButton("send");
-    private final JPanel connectOption;
+    private JPanel connectOption;
 
     private final ServerWindow serverWindow;
     private final ChatClientWindow instance;
@@ -32,10 +32,17 @@ public class ChatClientWindow extends JFrame {
     public ChatClientWindow(ServerWindow serverWindow) {
         instance = this;
         this.serverWindow = serverWindow;
-
         setSize(WIDTH, HEIGHT);
         setLocationRelativeTo(null);
         setTitle("Chat client");
+        addPanels();
+        addListeners();
+
+        setVisible(true);
+
+    }
+
+    private void addPanels() {
 
         JPanel serverParameters = new JPanel(new GridLayout(1, 3));
         serverParameters.add(serverIp);
@@ -61,8 +68,9 @@ public class ChatClientWindow extends JFrame {
         sendOptions.add(buttonSendMessage, BorderLayout.EAST);
         add(sendOptions, BorderLayout.SOUTH);
 
-        setVisible(true);
+    }
 
+    private void addListeners() {
         buttonConnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -93,7 +101,6 @@ public class ChatClientWindow extends JFrame {
                 sendMessageToServerAndClearField();
             }
         });
-
     }
 
     private void sendMessageToServerAndClearField() {
