@@ -85,8 +85,8 @@ public class ChatServer {
     }
 
     private void saveMessage(String userMessages) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(historyFile))) {
-            writer.append(userMessages);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(historyFile, true))) {
+            writer.write(userMessages);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

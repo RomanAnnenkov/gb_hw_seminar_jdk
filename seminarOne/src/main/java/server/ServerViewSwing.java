@@ -43,12 +43,11 @@ public class ServerViewSwing extends JFrame implements ServerView {
         buttonStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                informationMessages.append(LocalDateTime.now().format(server.getDateTimeFormatter()));
                 if (server.getServerStatus()) {
-                    informationMessages.append("server already working\n");
+                    informationMessages.append(dateTimeWrapper("server already working"));
                 } else {
                     server.setServerStatus(true);
-                    informationMessages.append("server started\n");
+                    informationMessages.append(dateTimeWrapper("server started"));
                 }
             }
         });
@@ -59,9 +58,9 @@ public class ServerViewSwing extends JFrame implements ServerView {
                 if (server.getServerStatus()) {
                     server.setServerStatus(false);
                     server.disconnectUsers();
-                    informationMessages.append(LocalDateTime.now().format(server.getDateTimeFormatter()) + "server stopped\n");
+                    informationMessages.append(dateTimeWrapper("server stopped"));
                 } else {
-                    informationMessages.append(LocalDateTime.now().format(server.getDateTimeFormatter()) + "server not working\n");
+                    informationMessages.append(dateTimeWrapper("server not working"));
                 }
             }
         });
@@ -75,5 +74,9 @@ public class ServerViewSwing extends JFrame implements ServerView {
     @Override
     public void showInfoMessage(String message) {
         informationMessages.append(message);
+    }
+
+    private String dateTimeWrapper(String message){
+        return LocalDateTime.now().format(server.getDateTimeFormatter()) + message + "\n";
     }
 }
