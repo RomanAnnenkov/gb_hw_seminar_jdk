@@ -1,4 +1,5 @@
 import calculator.Calculator;
+import pair.Pair;
 
 import java.math.BigDecimal;
 
@@ -24,6 +25,10 @@ public class Main {
         //3. Напишите обобщенный класс Pair, который представляет собой пару значений разного типа.
         // Класс должен иметь методы getFirst(), getSecond() для получения значений каждого из составляющих
         // пары, а также переопределение метода toString(), возвращающее строковое представление пары.
+        Pair<Integer, String> pair = new Pair<>(1, "test");
+        System.out.println(pair.getFirst());
+        System.out.println(pair.getSecond());
+        System.out.println(pair);
     }
 
     public static <T> boolean compareArrays(T[] arr1, T[] arr2) {

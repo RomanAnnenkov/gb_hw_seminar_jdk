@@ -6,7 +6,7 @@ public class Calculator {
         return arg1.doubleValue() + arg2.doubleValue();
     }
 
-    public static <T extends Number> double subtract(T arg1, T arg2){
+    public static <T extends Number> double subtract(T arg1, T arg2) {
         return arg1.doubleValue() - arg2.doubleValue();
     }
 
