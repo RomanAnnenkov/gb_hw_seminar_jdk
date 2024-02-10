@@ -1,5 +1,7 @@
 package server;
 
+import repository.Repository;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,8 +18,8 @@ public class ServerViewSwing extends JFrame implements ServerView {
     private final JTextArea informationMessages = new JTextArea();
     private ChatServer server;
 
-    public ServerViewSwing() {
-        server = new ChatServer(this);
+    public ServerViewSwing(Repository<String> repository) {
+        server = new ChatServer(this, repository);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(WIDTH, HEIGHT);
         setLocationRelativeTo(null);

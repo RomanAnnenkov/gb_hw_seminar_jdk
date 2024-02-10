@@ -2,8 +2,8 @@ package server;
 
 import client.ChatClient;
 import exceptions.LoginTakenException;
+import repository.Repository;
 
-import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -14,9 +14,10 @@ public class ChatServer {
     private final Map<String, ChatClient> authorizedUsers;
     private boolean isServerWorking;
     private final ServerView view;
-    private File historyFile;
+    private final Repository<String> repository;
 
-    public ChatServer(ServerView view) {
+    public ChatServer(ServerView view, Repository<String> repository) {
+        this.repository = repository;
         authorizedUsers = new HashMap<>();
         this.view = view;
         isServerWorking = false;
@@ -69,27 +70,11 @@ public class ChatServer {
     }
 
     public String loadMessages() {
-        StringBuilder builder = new StringBuilder();
-        historyFile = new File("messages.log");
-        if (historyFile.exists() && historyFile.isFile()) {
-            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(historyFile))) {
-                while (bufferedReader.ready()) {
-                    builder.append(bufferedReader.readLine());
-                    builder.append("\n");
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return builder.toString();
+        return repository.load();
     }
 
     private void saveMessage(String userMessages) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(historyFile, true))) {
-            writer.write(userMessages);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        repository.save(userMessages);
     }
 
 }
