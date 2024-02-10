@@ -1,7 +1,7 @@
 package client;
 
 import exceptions.LoginTakenException;
-import server.ServerWindow;
+import server.ChatServer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 
 
-public class ChatClientWindow extends JFrame {
+public class ChatClientViewSwing extends JFrame implements ChatClientView {
     private static final int WIDTH = 400;
     private static final int HEIGHT = 300;
 
@@ -24,14 +24,11 @@ public class ChatClientWindow extends JFrame {
     private final JButton buttonConnect = new JButton("connect");
     private final JButton buttonSendMessage = new JButton("send");
     private JPanel connectOption;
-
-    private final ServerWindow serverWindow;
-    private final ChatClientWindow instance;
+    private final ChatClient client;
 
 
-    public ChatClientWindow(ServerWindow serverWindow) {
-        instance = this;
-        this.serverWindow = serverWindow;
+    public ChatClientViewSwing(ChatServer server) {
+        client = new ChatClient(this, server);
         setSize(WIDTH, HEIGHT);
         setLocationRelativeTo(null);
         setTitle("Chat client");
@@ -74,16 +71,17 @@ public class ChatClientWindow extends JFrame {
         buttonConnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 try {
-                    if (serverWindow.authorize(instance, login.getText(), Arrays.hashCode(password.getPassword()))) {
+                    if (client.authorize(login.getText(), Arrays.hashCode(password.getPassword()))) {
                         messages.append("Connection success!\n\n");
-                        messages.append(serverWindow.getMessages().getText());
+                        messages.append(client.loadHistory());
                         connectOption.setVisible(false);
                     } else {
                         messages.append("Connection failed\n");
                     }
                 } catch (LoginTakenException ex) {
-                    messages.append(ex.getMessage());
+                    messages.append(ex.getMessage() + "\n");
                 }
             }
         });
@@ -103,19 +101,21 @@ public class ChatClientWindow extends JFrame {
         });
     }
 
-    private void sendMessageToServerAndClearField() {
+    public void sendMessageToServerAndClearField() {
         String message = messageForSend.getText();
         if (!message.isBlank()) {
-            serverWindow.receiveMessage(login.getText(), messageForSend.getText());
+            client.sendMessageToServer(login.getText(), messageForSend.getText());
             messageForSend.setText("");
         }
     }
 
-    public void newMessageFromServer(String message) {
+    @Override
+    public void updateMessages(String message) {
         messages.append(message);
     }
 
-    public void disconnect() {
+    @Override
+    public void disconnectAction() {
         messages.append("You have been disconnected from the server.\n");
         connectOption.setVisible(true);
     }
