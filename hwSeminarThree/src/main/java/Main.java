@@ -34,7 +34,7 @@ public class Main {
     public static <T> boolean compareArrays(T[] arr1, T[] arr2) {
         if (arr1.length == arr2.length) {
             for (int i = 0; i < arr1.length; i++) {
-                if (!arr1[i].getClass().getSimpleName().equals(arr2[i].getClass().getSimpleName())) {
+                if (!arr1[i].getClass().getName().equals(arr2[i].getClass().getName())) {
                     return false;
                 }
             }
