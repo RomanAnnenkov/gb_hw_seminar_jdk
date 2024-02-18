@@ -1,0 +1,60 @@
+import java.util.concurrent.CountDownLatch;
+
+public class Philosopher extends Thread {
+
+    private final int MAX_FOOD_COUNT = 3;
+    private final int TIME_FOR_EAT = 2000;
+    private final int TIME_FOR_MEDITATE = 1000;
+
+    private int foodCount;
+    private boolean isFull;
+    private final String name;
+    private final Fork leftFork;
+    private final Fork rightFork;
+
+    private final CountDownLatch countDownLatch;
+
+    public Philosopher(String name, Fork leftFork, Fork rightFork, CountDownLatch countDownLatch) {
+        isFull = false;
+        this.name = name;
+        this.leftFork = leftFork;
+        this.rightFork = rightFork;
+        this.countDownLatch = countDownLatch;
+    }
+
+    @Override
+    public void run() {
+        while (!isFull) {
+            try {
+                eat();
+                meditate();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        System.out.println(name + " is full and sleeping)");
+        countDownLatch.countDown();
+    }
+
+    private void meditate() throws InterruptedException {
+        System.out.println(name + " meditating.");
+        Thread.sleep(TIME_FOR_MEDITATE);
+    }
+
+    private void eat() throws InterruptedException {
+        synchronized (leftFork) {
+            synchronized (rightFork) {
+                foodCount++;
+                System.out.printf("%s take %s, %s and start %s approach to spaghetti. \n", name, leftFork, rightFork, foodCount);
+                Thread.sleep(TIME_FOR_EAT);
+
+                if (foodCount >= MAX_FOOD_COUNT) {
+                    isFull = true;
+                }
+
+                System.out.printf("%s finish and put back %s and %s. \n", name, leftFork, rightFork);
+            }
+        }
+    }
+
+}
