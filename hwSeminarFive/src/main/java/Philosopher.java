@@ -42,19 +42,31 @@ public class Philosopher extends Thread {
     }
 
     private void eat() throws InterruptedException {
-        synchronized (leftFork) {
-            synchronized (rightFork) {
-                foodCount++;
-                System.out.printf("%s take %s, %s and start %s approach to spaghetti. \n", name, leftFork, rightFork, foodCount);
-                Thread.sleep(TIME_FOR_EAT);
+        if (lockForks()) {
+            Thread.sleep(TIME_FOR_EAT);
 
-                if (foodCount >= MAX_FOOD_COUNT) {
-                    isFull = true;
-                }
-
-                System.out.printf("%s finish and put back %s and %s. \n", name, leftFork, rightFork);
+            if (foodCount >= MAX_FOOD_COUNT) {
+                isFull = true;
             }
+
+            unlockForks();
         }
     }
 
+    private boolean lockForks() {
+        if (!leftFork.isLocked() && !rightFork.isLocked()) {
+            leftFork.lock();
+            rightFork.lock();
+            foodCount++;
+            System.out.printf("%s take %s, %s and start %s approach to spaghetti. \n", name, leftFork, rightFork, foodCount);
+            return true;
+        }
+        return false;
+    }
+
+    private void unlockForks() {
+        System.out.printf("%s finish and put back %s and %s. \n", name, leftFork, rightFork);
+        leftFork.unlock();
+        rightFork.unlock();
+    }
 }
