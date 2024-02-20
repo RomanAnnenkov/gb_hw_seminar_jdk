@@ -54,14 +54,17 @@ public class Philosopher extends Thread {
     }
 
     private boolean lockForks() {
-        if (!leftFork.isLocked() && !rightFork.isLocked()) {
-            leftFork.lock();
-            rightFork.lock();
-            foodCount++;
-            System.out.printf("%s take %s, %s and start %s approach to spaghetti. \n", name, leftFork, rightFork, foodCount);
-            return true;
+        if (!leftFork.tryLock()) {
+            return false;
         }
-        return false;
+        if (!rightFork.tryLock()) {
+            leftFork.unlock();
+            return false;
+        }
+        foodCount++;
+        System.out.printf("%s take %s, %s and start %s approach to spaghetti. \n", name, leftFork, rightFork, foodCount);
+        return true;
+
     }
 
     private void unlockForks() {
