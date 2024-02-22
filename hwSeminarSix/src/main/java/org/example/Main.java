@@ -1,5 +1,7 @@
 package org.example;
 
+import org.apache.commons.math3.stat.Frequency;
+
 public class Main {
     public static void main(String[] args) {
         System.out.println("hw seminar six");
@@ -13,7 +15,18 @@ public class Main {
         //Сохранить результат игр в одну из коллекций или в какой то библиотечный класс
         //Вывести на экран статистику по победам и поражениям
 
+        MontyHallGame game = new MontyHallGame();
+        Frequency frequencyWithChange = new Frequency();
+        Frequency frequencyWithoutChange = new Frequency();
 
+        for (int i = 0; i < 1000; i++) {
+            frequencyWithChange.addValue(game.play(true));
+            frequencyWithoutChange.addValue(game.play(false));
+        }
+        System.out.println("Win frequency with change choice :");
+        System.out.println(frequencyWithChange);
+        System.out.println("Win frequency without change choice :");
+        System.out.println(frequencyWithoutChange);
 
     }
 }
